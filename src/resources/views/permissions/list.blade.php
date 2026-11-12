@@ -110,7 +110,13 @@
                                                     </button>
 
                                                     <ul class="dropdown-menu">
-                                                        <li><a class="icon-trash-empty del d-flex align-items-center" href="{{ route("artadmin.permissions.delete",$permission->id) }}">Удалить без подтверждения</a></li>
+                                                        <li>
+                                                            <form action="{{ route("artadmin.permissions.delete",$permission->id) }}" method="POST">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <button type="submit" class="icon-trash-empty del d-flex align-items-center border-0 bg-transparent">Удалить без подтверждения</button>
+                                                            </form>
+                                                        </li>
                                                     </ul>
                                                 </div>
                                             </div>
@@ -126,7 +132,13 @@
                                 <td>
                                     <p>{{$permission->slug}}</p>
                                 </td>
-                                <td><a href="{{ route("artadmin.permissions.delete",$permission->id) }}">{{ trans("artadmin::admins.delete") }}</a></td>
+                                <td>
+                                    <form action="{{ route("artadmin.permissions.delete",$permission->id) }}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-link">{{ trans("artadmin::admins.delete") }}</button>
+                                    </form>
+                                </td>
 
                             </tr>
 

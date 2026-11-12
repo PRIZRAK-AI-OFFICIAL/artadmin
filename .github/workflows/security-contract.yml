@@ -1,0 +1,38 @@
+name: Security contract
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+
+permissions:
+  contents: read
+
+concurrency:
+  group: security-contract-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  security-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out source
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+
+      - name: Show PHP runtime
+        run: php --version
+
+      - name: Validate package metadata
+        run: composer validate --strict --no-check-publish
+
+      - name: Run focused security contract
+        run: php tests/security_contract.php
+
+      - name: Lint PHP sources
+        shell: bash
+        run: |
+          set -euo pipefail
+          find src tests -type f -name '*.php' ! -name '*.blade.php' -print0 \
+            | xargs -0 -n1 php -l

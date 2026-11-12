@@ -137,7 +137,13 @@
                                                     <ul class="dropdown-menu">
                                                         <li><a class="icon-pencil d-flex align-items-center" href="{{ route("artadmin.roles.show",$role->id) }}">Редактировать</a></li>
                                                         <li><hr class="dropdown-divider mt-5"></li>
-                                                        <li><a class="icon-trash-empty del d-flex align-items-center" href="{{ route("artadmin.roles.delete",$role->id) }}">Удалить</a></li>
+                                                        <li>
+                                                            <form action="{{ route("artadmin.roles.delete",$role->id) }}" method="POST">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <button type="submit" class="icon-trash-empty del d-flex align-items-center border-0 bg-transparent">Удалить</button>
+                                                            </form>
+                                                        </li>
                                                     </ul>
                                                 </div>
                                             </div>

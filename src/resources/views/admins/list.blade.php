@@ -229,7 +229,13 @@
                                                     <ul class="dropdown-menu">
                                                         <li><a class="icon-pencil d-flex align-items-center" href="{{ route("artadmin.admins.edit",$admin->id) }}">Редактировать</a></li>
                                                         <li><hr class="dropdown-divider mt-5"></li>
-                                                        <li><a class="icon-trash-empty del d-flex align-items-center" href="{{ route("artadmin.admins.delete",$admin->id) }}">Удалить без подтверждения</a></li>
+                                                        <li>
+                                                            <form action="{{ route("artadmin.admins.delete",$admin->id) }}" method="POST">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <button type="submit" class="icon-trash-empty del d-flex align-items-center border-0 bg-transparent">Удалить без подтверждения</button>
+                                                            </form>
+                                                        </li>
                                                     </ul>
                                                 </div>
                                             </div>
