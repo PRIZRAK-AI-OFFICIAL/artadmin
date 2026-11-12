@@ -48,6 +48,7 @@ class CreateUser extends Command
     {
         $email = $this->argument('email');
         $password=$this->argument("password");
+        $passwordMinLength = max(12, (int) config('artadmin.password_min_length', 12));
 
         if(User::query()->count()>0){
             print("You already have a admin. Delete him\n");
@@ -65,8 +66,8 @@ class CreateUser extends Command
            print("Not correct email\n please try again php artisan artadmin:adduser myemai@email.com 123456\n");
            return false;
        }
-       if(!(isset($password) and is_string($password) and strlen($password)>=6)){
-           print("Not correct password . Min length 6 symbols\n please try again php artisan artadmin:adduser myemai@email.com 123456\n");
+       if(!(isset($password) and is_string($password) and strlen($password) >= $passwordMinLength)){
+           print("Not correct password. Minimum length: ".$passwordMinLength." symbols\n");
            return false;
        }
 
@@ -93,8 +94,6 @@ class CreateUser extends Command
 
 
        print("user success created\n");
-        print("email:".$email."\n");
-        print("password:".$password."\n");
 
         return 0;
     }

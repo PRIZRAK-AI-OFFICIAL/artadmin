@@ -17,12 +17,15 @@ return [
     'guard'=>'admin',
     'top_menu_right'=>[
         ["icon"=>"icon-edit","route_name"=>"artadmin.password","title"=>"current_user"],
-        ["icon"=>"icon-edit","route_name"=>"artadmin.clear_cache","title"=>'Очистить кеш'],
+        ["icon"=>"icon-edit","permission"=>"root","route_name"=>"artadmin.clear_cache","method"=>"POST","title"=>'Очистить кеш'],
         ["icon"=>"icon-users",'permission'=>'root',"route_name"=>"artadmin.admins.list","title"=>"Все администраторы"],
         ["icon"=>"icon-users",'permission'=>'root',"route_name"=>"artadmin.roles.list","title"=>"Роли"],
         ["icon"=>"icon-users",'permission'=>'root',"route_name"=>"artadmin.permissions.list","title"=>"Права доступа"],
-        ["icon"=>"icon-logout","route_name"=>'artadmin.logout','title'=>'Выйти']
+        ["icon"=>"icon-logout","route_name"=>'artadmin.logout',"method"=>"POST",'title'=>'Выйти']
     ],
+    'login_max_attempts'=>5,
+    'login_decay_seconds'=>60,
+    'password_min_length'=>12,
     'top_menu_setup'=>[
         ["route_name"=>"artadmin.password","title"=>"Общие настройки"],
         ["route_name"=>"artadmin.password","title"=>"Настройка почты"],

@@ -55,10 +55,12 @@ class AdminsController extends Controller
 
     public function add(Request $request){
 
+        $passwordMinLength = max(12, (int) config('artadmin.password_min_length', 12));
+
         $validated = $request->validate([
             'name' => 'required|max:255',
             'email' => 'required|email:rfc,dns|unique:\Artadmin\Models\User,email',
-            'password'=>'required|min:6|max:255',
+            'password'=>'required|string|min:'.$passwordMinLength.'|max:255',
         ]);
 
         $new_admin=new User();
@@ -98,6 +100,7 @@ class AdminsController extends Controller
     public function doedit($id){
 
         $request=request();
+        $passwordMinLength = max(12, (int) config('artadmin.password_min_length', 12));
 
         $admin=User::query()->find($id);
         if(!$admin){
@@ -106,7 +109,7 @@ class AdminsController extends Controller
         $validated = $request->validate([
             'name' => 'required|max:255',
 
-            'password'=>'nullable|min:6|max:255',
+            'password'=>'nullable|string|min:'.$passwordMinLength.'|max:255',
         ]);
 
 

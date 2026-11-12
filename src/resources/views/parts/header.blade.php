@@ -120,8 +120,28 @@
                         @if(count($top_menu_right))
                             @foreach($top_menu_right as $top_link)
                                 @if((isset($top_link['permission'])  and (artadmin_user()->can($top_link['permission']) or artadmin_user()->can("root"))) or (!isset($top_link['permission'])))
+                                @php
+                                    $topLinkMethod = strtoupper($top_link['method'] ?? (
+                                        in_array($top_link['route_name'], ['artadmin.clear_cache', 'artadmin.logout'], true)
+                                            ? 'POST'
+                                            : 'GET'
+                                    ));
+                                @endphp
                                 @if($top_link['title']=="current_user")
                                 <li><a class="dropdown-item d-flex" href="{{ route($top_link['route_name']) }}"><span class="mr-auto">{{ artadmin_user()->name }}</span> <i class="{{$top_link['icon']}} ml-3 pl-3"></i></a></li>
+                                @elseif($topLinkMethod !== 'GET')
+                                    <li>
+                                        <form action="{{ route($top_link['route_name']) }}" method="POST">
+                                            @csrf
+                                            @if($topLinkMethod !== 'POST')
+                                                @method($topLinkMethod)
+                                            @endif
+                                            <button type="submit" class="dropdown-item d-flex border-0 bg-transparent">
+                                                <span class="mr-auto">{{ $top_link['title'] }}</span>
+                                                <i class="{{$top_link['icon']}} ml-3 pl-3"></i>
+                                            </button>
+                                        </form>
+                                    </li>
                                 @else
                                     <li><a class="dropdown-item d-flex" href="{{ route($top_link['route_name']) }}"><span class="mr-auto">{{ $top_link['title'] }}</span> <i class="{{$top_link['icon']}} ml-3 pl-3"></i></a></li>
 

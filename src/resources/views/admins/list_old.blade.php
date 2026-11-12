@@ -68,7 +68,13 @@
                 </td>
                 <td>{{$admin->email}}</td>
                 <td><a href="{{ route("artadmin.admins.edit",$admin->id) }}">{{ trans("artadmin::admins.edit") }}</a></td>
-                <td><a href="{{ route("artadmin.admins.delete",$admin->id) }}">{{ trans("artadmin::admins.delete") }}</a></td>
+                <td>
+                    <form action="{{ route("artadmin.admins.delete",$admin->id) }}" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-link">{{ trans("artadmin::admins.delete") }}</button>
+                    </form>
+                </td>
             </tr>
             @endforeach
             @endif

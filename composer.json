@@ -24,6 +24,9 @@
             "Artadmin\\": "src/"
         }
     },
+    "scripts": {
+        "test-security": "php tests/security_contract.php"
+    },
     "extra": {
         "laravel": {
             "providers": [

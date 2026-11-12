@@ -7,7 +7,7 @@ namespace Artadmin\Controllers;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\RateLimiter;
 
 
 class LoginController extends \App\Http\Controllers\Controller
@@ -39,9 +39,18 @@ class LoginController extends \App\Http\Controllers\Controller
         ]);
 
         $credentials = $request->only('email', 'password');
-       // $credentials['password']='$2y$10$knqf72eah8jGZ40DxZ2bMePtKvg1g7Bd5zBIA5QtYhF8XGsAD7rGK';
+        $rateLimitKey = 'artadmin-login:' . hash('sha256', strtolower(trim((string) $credentials['email'])) . '|' . $request->ip());
+        $maxAttempts = max(1, (int) config('artadmin.login_max_attempts', 5));
+        $decaySeconds = max(1, (int) config('artadmin.login_decay_seconds', 60));
+
+        if (RateLimiter::tooManyAttempts($rateLimitKey, $maxAttempts)) {
+            return redirect()->route("artadmin.login")->withErrors([trans("artadmin::login.incorrect")]);
+        }
+
+        RateLimiter::hit($rateLimitKey, $decaySeconds);
 
         if (Auth::guard($this->guard)->attempt($credentials)) {
+            RateLimiter::clear($rateLimitKey);
             $request->session()->regenerate();
             return redirect()->route(config("artadmin.route_after_login"))
                 ->withSuccess(trans("artadmin::login.success"));

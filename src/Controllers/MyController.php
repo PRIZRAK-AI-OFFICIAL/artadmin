@@ -19,6 +19,7 @@ class MyController extends  Controller
     function change(){
         $admin=artadmin_user();
         $post=request()->post();
+        $passwordMinLength = max(12, (int) config('artadmin.password_min_length', 12));
         $admin->makeVisible(['password']);
 
 
@@ -26,7 +27,7 @@ class MyController extends  Controller
         if(!(isset($post['old_password']) and is_string($post['old_password']) and Hash::check($post['old_password'],$admin->password)) ){
             return back()->with("error",trans("artadmin::notify.old_password_incorrect"));
         }
-        if(!(isset($post['new_password']) and is_string($post['new_password']) and strlen($post['new_password'])>5)){
+        if(!(isset($post['new_password']) and is_string($post['new_password']) and strlen($post['new_password']) >= $passwordMinLength)){
             return back()->with("error",trans("artadmin::notify.new_password_incorrect"));
         }
 
